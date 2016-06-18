@@ -12,6 +12,9 @@ class FolderIndex
 
 public:
 	FolderIndex(const char* path, bool recursive);
+	~FolderIndex();
+
+	const char* GetPath();
 
 	int GetFileCount();
 	const char* GetFilePath(int i);
@@ -20,11 +23,11 @@ public:
 	const char* GetDirPath(int i);
 
 private:
-	int m_fileCount;
-	const char* m_files;
+	void ReadDir(void* impl, const char* dirname, bool recursive);
 
-	int m_dirCount;
-	const char* m_dirs;
+	s::String m_path;
+	s::StackArray<s::String> m_files;
+	s::StackArray<s::String> m_dirs;
 };
 
 class Folder
@@ -33,10 +36,12 @@ public:
 	Folder(const char* path);
 	~Folder();
 
-	FolderIndex GetIndex(bool recursive);
+	const char* GetPath();
+
+	FolderIndex GetIndex(bool recursive = false);
 
 private:
-	char* m_path;
+	s::String m_path;
 };
 
 VINYL_NS_END;
