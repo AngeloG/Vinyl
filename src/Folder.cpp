@@ -54,6 +54,7 @@ void FolderIndex::ReadDir(void* impl, const char* dirname, bool recursive)
 		path += findData.cFileName;
 
 		if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+			path += "/";
 			m_dirs.Push() = path;
 			if (recursive) {
 				ReadDir(nullptr, path, true);
