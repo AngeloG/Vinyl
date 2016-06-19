@@ -1,10 +1,11 @@
 #include "Common.h"
 #include "Folder.h"
 
+#if !WINDOWS
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include <string.h>
+#endif
 
 VINYL_NS_BEGIN;
 
@@ -14,7 +15,12 @@ FolderIndex::FolderIndex(const char* path, bool recursive)
 	if (!pathname.EndsWith("/")) {
 		pathname += "/";
 	}
+	m_path = pathname;
+#if WINDOWS
+	ReadDir(nullptr, pathname, recursive);
+#else
 	ReadDir(opendir(pathname), pathname, recursive);
+#endif
 }
 
 FolderIndex::~FolderIndex()
@@ -28,6 +34,35 @@ const char* FolderIndex::GetPath()
 
 void FolderIndex::ReadDir(void* impl, const char* dirname, bool recursive)
 {
+#if WINDOWS
+	WIN32_FIND_DATA findData;
+
+	s::String fnmDir = dirname;
+	fnmDir += "*";
+
+	HANDLE findHandle = FindFirstFile(fnmDir, &findData);
+	if (findHandle == INVALID_HANDLE_VALUE) {
+		return;
+	}
+
+	do {
+		if (!strcmp(findData.cFileName, ".") || !strcmp(findData.cFileName, "..")) {
+			continue;
+		}
+
+		s::String path = dirname;
+		path += findData.cFileName;
+
+		if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+			m_dirs.Push() = path;
+			if (recursive) {
+				ReadDir(nullptr, path, true);
+			}
+		} else {
+			m_files.Push() = path;
+		}
+	} while (FindNextFile(findHandle, &findData));
+#else
 	DIR* d = (DIR*)impl;
 	if (!d) { return; }
 
@@ -52,6 +87,7 @@ void FolderIndex::ReadDir(void* impl, const char* dirname, bool recursive)
 			}
 		}
 	}
+#endif
 }
 
 int FolderIndex::GetFileCount()
