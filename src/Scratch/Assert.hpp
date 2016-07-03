@@ -65,9 +65,9 @@ SCRATCH_NAMESPACE_END;
 // Windows
 #define ASSERT(expr) {						 \
 	if(!(expr)) {										\
-		static UBYTE bWasHere = 0;		 \
+		static unsigned char bWasHere = 0; \
 		if(!bWasHere) {								\
-			if(Scratch::_scratch_assert( \
+			if(s::_scratch_assert( \
 				#expr,										 \
 				__FILE__,									\
 				__LINE__)) {							 \
