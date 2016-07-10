@@ -141,7 +141,7 @@ namespace Log
 		SetConsoleTextAttribute(hConsole, 7);
 		printf("%s\n", (const char*)str);
 #else
-		printf("\x1B[38m[INFO]\x1B[0m %s\n", (const char*)str);
+		printf("\x1B[37m[INFO]\x1B[0m %s\n", (const char*)str);
 #endif
 
 		_mutex.Unlock();
