@@ -1,6 +1,8 @@
 #include "Common.h"
 #include "Logging.h"
 
+#include <stdarg.h>
+
 VINYL_NS_BEGIN;
 
 namespace Log
