@@ -2,6 +2,7 @@
 #include "Logging.h"
 
 #include <stdarg.h>
+#include <time.h>
 
 VINYL_NS_BEGIN;
 
@@ -89,128 +90,112 @@ namespace Log
 
 	static s::Mutex _mutex;
 
-	void Trace(const char* format, ...)
+	static void LogLine(const char* keyword, const s::String &str, int16_t color_windows, const char* color_linux)
 	{
 		_mutex.Lock();
+
+#define LOG_FORMAT_BEGIN "%7s | %02d:%02d:%02d | "
+
+		time_t t = time(nullptr);
+		tm tms;
+		localtime_s(&tms, &t);
+
+		s::String lineBegin = s::strPrintF(LOG_FORMAT_BEGIN, keyword, tms.tm_hour, tms.tm_min, tms.tm_sec);
+
+#if WINDOWS
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hConsole, color_windows);
+		printf("%s%s\n", (const char*)lineBegin, (const char*)str);
+		SetConsoleTextAttribute(hConsole, 7);
+#else
+		printf("\x1B[%sm%s\x1B[0m%s\n", color_linux, (const char*)lineBegin, (const char*)str);
+#endif
+
+		_mutex.Unlock();
+	}
+
+	void Trace(const char* format, ...)
+	{
+		if (Level > LogLevel_Trace) {
+			return;
+		}
 
 		va_list vl;
 		va_start(vl, format);
 		s::String str = Format(format, vl);
 		va_end(vl);
 
-#if WINDOWS
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTextAttribute(hConsole, 8);
-		printf("[TRACE] ");
-		SetConsoleTextAttribute(hConsole, 7);
-		printf("%s\n", (const char*)str);
-#else
-		printf("\x1B[02m[TRACE]\x1B[0m %s\n", (const char*)str);
-#endif
-
-		_mutex.Unlock();
+		LogLine("TRACE", str, 8, "02");
 	}
 
 	void Debug(const char* format, ...)
 	{
-		_mutex.Lock();
+		if (Level > LogLevel_Debug) {
+			return;
+		}
 
 		va_list vl;
 		va_start(vl, format);
 		s::String str = Format(format, vl);
 		va_end(vl);
 
-		printf("[DEBUG] %s\n", (const char*)str);
-
-		_mutex.Unlock();
+		LogLine("DEBUG", str, 7, "38");
 	}
 
 	void Info(const char* format, ...)
 	{
-		_mutex.Lock();
+		if (Level > LogLevel_Info) {
+			return;
+		}
 
 		va_list vl;
 		va_start(vl, format);
 		s::String str = Format(format, vl);
 		va_end(vl);
 
-#if WINDOWS
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTextAttribute(hConsole, 15);
-		printf("[INFO] ");
-		SetConsoleTextAttribute(hConsole, 7);
-		printf("%s\n", (const char*)str);
-#else
-		printf("\x1B[37m[INFO]\x1B[0m %s\n", (const char*)str);
-#endif
-
-		_mutex.Unlock();
+		LogLine("INFO", str, 15, "37");
 	}
 
 	void Warning(const char* format, ...)
 	{
-		_mutex.Lock();
+		if (Level > LogLevel_Warning) {
+			return;
+		}
 
 		va_list vl;
 		va_start(vl, format);
 		s::String str = Format(format, vl);
 		va_end(vl);
 
-#if WINDOWS
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTextAttribute(hConsole, 13);
-		printf("[WARNING] ");
-		SetConsoleTextAttribute(hConsole, 7);
-		printf("%s\n", (const char*)str);
-#else
-		printf("\x1B[35m[WARNING]\x1B[0m %s\n", (const char*)str);
-#endif
-
-		_mutex.Unlock();
+		LogLine("WARNING", str, 13, "35");
 	}
 
 	void Error(const char* format, ...)
 	{
-		_mutex.Lock();
+		if (Level > LogLevel_Error) {
+			return;
+		}
 
 		va_list vl;
 		va_start(vl, format);
 		s::String str = Format(format, vl);
 		va_end(vl);
 
-#if WINDOWS
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTextAttribute(hConsole, 14);
-		printf("[ERROR] ");
-		SetConsoleTextAttribute(hConsole, 7);
-		printf("%s\n", (const char*)str);
-#else
-		printf("\x1B[33m[ERROR]\x1B[0m %s\n", (const char*)str);
-#endif
-
-		_mutex.Unlock();
+		LogLine("ERROR", str, 14, "33");
 	}
 
 	void Fatal(const char* format, ...)
 	{
-		_mutex.Lock();
+		if (Level > LogLevel_Fatal) {
+			return;
+		}
 
 		va_list vl;
 		va_start(vl, format);
 		s::String str = Format(format, vl);
 		va_end(vl);
 
-#if WINDOWS
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTextAttribute(hConsole, 12);
-		printf("[FATAL] ");
-		SetConsoleTextAttribute(hConsole, 7);
-		printf("%s\n", (const char*)str);
-#else
-		printf("\x1B[31m[FATAL]\x1B[0m %s\n", (const char*)str);
-#endif
-
-		_mutex.Unlock();
+		LogLine("FATAL", str, 12, "31");
 	}
 }
 
