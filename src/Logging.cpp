@@ -8,36 +8,54 @@ VINYL_NS_BEGIN;
 
 namespace Log
 {
-	FormatVarInt::FormatVarInt(int i)
+	FormatVar::FormatVar(int i)
 	{
-		m_value = i;
+		m_type = FVT_Integer;
+		m_data = (void*)i;
 	}
 
-	FormatVarInt::~FormatVarInt()
+	FormatVar::FormatVar(const char* str)
+	{
+		m_type = FVT_String;
+		m_data = (void*)str;
+	}
+
+	FormatVar::FormatVar(char c)
+	{
+		m_type = FVT_Char;
+		m_data = (void*)c;
+	}
+
+	FormatVar::~FormatVar()
 	{
 		if (m_cache != nullptr) {
-			delete m_cache;
+			free(m_cache);
 		}
 	}
 
-	const char* FormatVarInt::GetString()
+	const char* FormatVar::GetString()
 	{
-		if (m_cache != nullptr) {
-			delete m_cache;
-		}
-		m_cache = (char*)malloc(14);
-		snprintf(m_cache, 14, "%d", m_value);
-		return m_cache;
-	}
-	
-	FormatVarString::FormatVarString(const char* str)
-	{
-		m_value = str;
-	}
+		if (m_type == FVT_Integer) {
+			if (m_cache == nullptr) {
+				m_cache = (char*)malloc(14);
+			}
+			int num = (int)m_data;
+			snprintf(m_cache, 14, "%d", num);
+			return m_cache;
 
-	const char* FormatVarString::GetString()
-	{
-		return m_value;
+		} else if (m_type == FVT_String) {
+			return (const char*)m_data;
+
+		} else if (m_type == FVT_Char) {
+			if (m_cache == nullptr) {
+				m_cache = (char*)malloc(2);
+				m_cache[1] = '\0';
+			}
+			m_cache[0] = (char)(int)m_data;
+			return m_cache;
+		}
+
+		return "";
 	}
 
 	s::String Format(const char* format, va_list vl)

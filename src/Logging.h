@@ -27,40 +27,30 @@ namespace Log
 	extern void Error(const char* format, ...);
 	extern void Fatal(const char* format, ...);
 
+	enum FormatVarType
+	{
+		FVT_Integer,
+		FVT_String,
+		FVT_Char
+	};
+
 	class FormatVar
 	{
 	public:
-		~FormatVar() {}
-
-		virtual const char* GetString() = 0;
-	};
-
-	class FormatVarInt : public FormatVar
-	{
-	public:
-		int m_value;
+		void* m_data;
+		FormatVarType m_type;
 		char* m_cache = nullptr;
 
 	public:
-		FormatVarInt(int i);
-		virtual ~FormatVarInt();
+		FormatVar(int i);
+		FormatVar(const char* str);
+		FormatVar(char c);
+		~FormatVar();
 
-		virtual const char* GetString();
-	};
-
-	class FormatVarString : public FormatVar
-	{
-	public:
-		const char* m_value;
-
-	public:
-		FormatVarString(const char* str);
-
-		virtual const char* GetString();
+		const char* GetString();
 	};
 }
 
 VINYL_NS_END;
 
-#define FINT(var) v::Log::FormatVarInt(var)
-#define FSTR(var) v::Log::FormatVarString(var)
+#define FVAR(var) v::Log::FormatVar(var)
