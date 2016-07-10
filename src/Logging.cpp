@@ -23,7 +23,7 @@ namespace Log
 			delete m_cache;
 		}
 		m_cache = (char*)malloc(14);
-		_itoa_s(m_value, m_cache, 14, 10);
+		snprintf(m_cache, 14, "%d", m_value);
 		return m_cache;
 	}
 	
