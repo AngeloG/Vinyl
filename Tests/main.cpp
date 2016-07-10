@@ -1,13 +1,17 @@
 #include <stdio.h>
 
 #include <Folder.h>
+#include <Logging.h>
 
 int main()
 {
-	v::Folder folder("/home/nim");
-	v::FolderIndex index = folder.GetIndex(true);
-	int numFiles = index.GetFileCount();
-	int numDirs = index.GetDirCount();
-	printf("%d files, %d dirs\n", numFiles, numDirs);
+	v::Log::Trace("Hello, world!");
+	v::Log::Debug("Hello, world!");
+	v::Log::Info("Hello, world!");
+	v::Log::Warning("Hello, world!");
+	v::Log::Error("Hello, world!");
+	v::Log::Fatal("Hello, world!");
+
+	getchar();
 	return 0;
 }

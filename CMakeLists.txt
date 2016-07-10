@@ -5,7 +5,11 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_library(vinyl
 	src/Common.cpp
+	src/Common.h
 	src/Folder.cpp
+	src/Folder.h
+	src/Logging.cpp
+	src/Logging.h
 )
 
 find_package(Threads REQUIRED)
