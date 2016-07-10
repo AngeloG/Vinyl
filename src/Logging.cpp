@@ -98,7 +98,11 @@ namespace Log
 
 		time_t t = time(nullptr);
 		tm tms;
+#if WINDOWS
 		localtime_s(&tms, &t);
+#else
+		localtime_r(&t, &tms);
+#endif
 
 		s::String lineBegin = s::strPrintF(LOG_FORMAT_BEGIN, keyword, tms.tm_hour, tms.tm_min, tms.tm_sec);
 
@@ -108,7 +112,7 @@ namespace Log
 		printf("%s%s\n", (const char*)lineBegin, (const char*)str);
 		SetConsoleTextAttribute(hConsole, 7);
 #else
-		printf("\x1B[%sm%s\x1B[0m%s\n", color_linux, (const char*)lineBegin, (const char*)str);
+		printf("\x1B[%sm%s%s\x1B[0m\n", color_linux, (const char*)lineBegin, (const char*)str);
 #endif
 
 		_mutex.Unlock();
