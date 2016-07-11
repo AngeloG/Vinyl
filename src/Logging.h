@@ -27,10 +27,14 @@ namespace Log
 	extern void Error(const char* format, ...);
 	extern void Fatal(const char* format, ...);
 
-	enum FormatVarType
+	enum FormatVarType : int
 	{
-		FVT_Integer,
+		FVT_Integer_16,
+		FVT_Integer_32,
+		FVT_UnsignedInteger_16,
+		FVT_UnsignedInteger_32,
 		FVT_String,
+		FVT_Pointer,
 		FVT_Char
 	};
 
@@ -42,8 +46,12 @@ namespace Log
 		char* m_cache = nullptr;
 
 	public:
-		FormatVar(int i);
-		FormatVar(const char* str);
+		FormatVar(int16_t i);
+		FormatVar(int32_t i);
+		FormatVar(uint16_t i);
+		FormatVar(uint32_t i);
+		FormatVar(void* p);
+		FormatVar(const char* p);
 		FormatVar(char c);
 		~FormatVar();
 

@@ -8,16 +8,40 @@ VINYL_NS_BEGIN;
 
 namespace Log
 {
-	FormatVar::FormatVar(int i)
+	FormatVar::FormatVar(int16_t i)
 	{
-		m_type = FVT_Integer;
+		m_type = FVT_Integer_16;
 		m_data = (void*)i;
 	}
 
-	FormatVar::FormatVar(const char* str)
+	FormatVar::FormatVar(int32_t i)
+	{
+		m_type = FVT_Integer_32;
+		m_data = (void*)i;
+	}
+
+	FormatVar::FormatVar(uint16_t i)
+	{
+		m_type = FVT_UnsignedInteger_16;
+		m_data = (void*)i;
+	}
+
+	FormatVar::FormatVar(uint32_t i)
+	{
+		m_type = FVT_UnsignedInteger_32;
+		m_data = (void*)i;
+	}
+
+	FormatVar::FormatVar(void* p)
+	{
+		m_type = FVT_Pointer;
+		m_data = p;
+	}
+
+	FormatVar::FormatVar(const char* p)
 	{
 		m_type = FVT_String;
-		m_data = (void*)str;
+		m_data = (void*)p;
 	}
 
 	FormatVar::FormatVar(char c)
@@ -35,20 +59,36 @@ namespace Log
 
 	const char* FormatVar::GetString()
 	{
-		if (m_type == FVT_Integer) {
+		if (m_type >= FVT_Integer_16 && m_type <= FVT_UnsignedInteger_32) {
 			if (m_cache == nullptr) {
 				m_cache = (char*)malloc(14);
 			}
+			if (m_type == FVT_UnsignedInteger_16 || m_type == FVT_UnsignedInteger_32) {
 #ifdef _LP64
-			int num = (int)(long int)m_data;
+				uint32_t num = (uint32_t)(long int)m_data;
 #else
-			int num = (int)m_data;
+				uint32_t num = (uint32_t)m_data;
 #endif
-			snprintf(m_cache, 14, "%d", num);
+				snprintf(m_cache, 14, "%u", num);
+			} else {
+#ifdef _LP64
+				int32_t num = (int32_t)(long int)m_data;
+#else
+				int32_t num = (int32_t)m_data;
+#endif
+				snprintf(m_cache, 14, "%d", num);
+			}
 			return m_cache;
 
 		} else if (m_type == FVT_String) {
 			return (const char*)m_data;
+
+		} else if (m_type == FVT_Pointer) {
+			if (m_cache == nullptr) {
+				m_cache = (char*)malloc(24);
+			}
+			snprintf(m_cache, 24, "%p", m_data);
+			return m_cache;
 
 		} else if (m_type == FVT_Char) {
 			if (m_cache == nullptr) {

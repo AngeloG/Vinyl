@@ -1,17 +1,31 @@
 #include <stdio.h>
 
-#include <Folder.h>
 #include <Logging.h>
+#include <ZipFile.h>
 
 int main()
 {
 	v::Log::Level = v::Log::LogLevel_Trace;
-	v::Log::Trace("Hello, world: %1 %2 %3", FVAR('>'), FVAR("Vinyl"), FVAR(10));
-	v::Log::Debug("Hello, world: %1", FVAR("Hey"));
-	v::Log::Info("Hello, world!");
-	v::Log::Warning("Hello, world!");
-	v::Log::Error("Hello, world!");
-	v::Log::Fatal("Hello, world!");
+
+	v::Log::Debug("Creating zip file");
+
+	{
+		v::ZipFile zip;
+		zip.Read("meow.zip");
+
+		s::StackArray<v::ZipEntry> entries;
+		zip.GetEntries(entries);
+
+		for (auto &entry : entries) {
+			v::Log::Debug("Zip entry %1: %2", FVAR(entry.GetIndex()), FVAR(entry.GetName()));
+
+			s::MemoryStream strm;
+			entry.Read(strm);
+			v::Log::Debug("Contents at %1 with size %2", FVAR(strm.strm_pubBuffer), FVAR(strm.Size()));
+		}
+	}
+
+	v::Log::Debug("Meow.zip created");
 
 	getchar();
 	return 0;

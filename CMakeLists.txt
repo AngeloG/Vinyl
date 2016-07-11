@@ -10,6 +10,11 @@ add_library(vinyl
 	src/Folder.h
 	src/Logging.cpp
 	src/Logging.h
+	src/ZipFile.cpp
+	src/ZipFile.h
+
+	src/ThirdParty/miniz.c
+	src/ThirdParty/miniz.h
 )
 
 find_package(Threads REQUIRED)
