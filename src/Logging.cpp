@@ -39,7 +39,11 @@ namespace Log
 			if (m_cache == nullptr) {
 				m_cache = (char*)malloc(14);
 			}
+#ifdef _LP64
+			int num = (int)(long int)m_data;
+#else
 			int num = (int)m_data;
+#endif
 			snprintf(m_cache, 14, "%d", num);
 			return m_cache;
 
@@ -51,7 +55,11 @@ namespace Log
 				m_cache = (char*)malloc(2);
 				m_cache[1] = '\0';
 			}
+#ifdef _LP64
+			m_cache[0] = (char)(long int)m_data;
+#else
 			m_cache[0] = (char)(int)m_data;
+#endif
 			return m_cache;
 		}
 
