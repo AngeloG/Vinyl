@@ -7,11 +7,11 @@ int main()
 {
 	v::Log::Level = v::Log::LogLevel_Trace;
 
-	v::Log::Debug("Creating zip file");
+	v::Log::Debug("Reading zip file test.zip");
 
-	{
+	try {
 		v::ZipFile zip;
-		zip.Read("meow.zip");
+		zip.Read("test.zip");
 
 		s::StackArray<v::ZipEntry> entries;
 		zip.GetEntries(entries);
@@ -23,9 +23,9 @@ int main()
 			entry.Read(strm);
 			v::Log::Debug("Contents at %1 with size %2", FVAR(strm.strm_pubBuffer), FVAR(strm.Size()));
 		}
+	} catch (s::Exception ex) {
+		v::Log::Fatal("Error: %1", FVAR(ex.Message));
 	}
-
-	v::Log::Debug("Meow.zip created");
 
 	getchar();
 	return 0;
