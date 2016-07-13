@@ -12,6 +12,8 @@ add_library(vinyl
 	src/Logging.h
 	src/ZipFile.cpp
 	src/ZipFile.h
+	src/File.cpp
+	src/File.h
 
 	src/ThirdParty/miniz.c
 	src/ThirdParty/miniz.h
