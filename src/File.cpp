@@ -20,7 +20,26 @@ namespace File
 #if WINDOWS
 		return CopyFile(fnmA, fnmB, !should_override) == 1;
 #else
-#error Implement me
+		if (!Exists(fnmA)) {
+			return false;
+		}
+		if (Exists(fnmB)) {
+			if (!should_override) {
+				return false;
+			}
+			Delete(fnmB);
+		}
+		FILE* fhA = fopen(fnmA, "rb");
+		FILE* fhB = fopen(fnmB, "wb");
+		void* buffer = malloc(1024);
+		while (!feof(fhA)) {
+			size_t szRead = fread(buffer, 1, 1024, fhA);
+			fwrite(buffer, 1, szRead, fhB);
+		}
+		free(buffer);
+		fclose(fhB);
+		fclose(fhA);
+		return true;
 #endif
 	}
 
