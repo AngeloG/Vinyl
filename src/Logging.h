@@ -29,6 +29,7 @@ namespace Log
 
 	enum FormatVarType : int
 	{
+		FVT_Unknown,
 		FVT_Integer_16,
 		FVT_Integer_32,
 		FVT_UnsignedInteger_16,
@@ -46,6 +47,8 @@ namespace Log
 		char* m_cache = nullptr;
 
 	public:
+		FormatVar();
+		FormatVar(const FormatVar &copy);
 		FormatVar(int16_t i);
 		FormatVar(int32_t i);
 		FormatVar(uint16_t i);

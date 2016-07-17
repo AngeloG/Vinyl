@@ -8,6 +8,18 @@ VINYL_NS_BEGIN;
 
 namespace Log
 {
+	FormatVar::FormatVar()
+	{
+		m_type = FVT_Unknown;
+		m_data = nullptr;
+	}
+
+	FormatVar::FormatVar(const FormatVar &copy)
+	{
+		m_type = copy.m_type;
+		m_data = copy.m_data;
+	}
+
 	FormatVar::FormatVar(int16_t i)
 	{
 		m_type = FVT_Integer_16;
@@ -136,7 +148,7 @@ namespace Log
 				}
 				if (num > numHighest) {
 					for (int j = numHighest; j < num; j++) {
-						FormatVar &newvar = va_arg(vl, FormatVar);
+						FormatVar newvar = va_arg(vl, FormatVar);
 						vars.Push(&newvar);
 					}
 					numHighest = num;
