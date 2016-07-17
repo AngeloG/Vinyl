@@ -30,9 +30,3 @@ target_link_libraries(VinylTests vinyl)
 include_directories(
 	src
 )
-
-# Clang hack: We don't care about passing non-POD types in varargs!
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	set_property(TARGET vinyl APPEND_STRING PROPERTY COMPILE_FLAGS -Wno-non-pod-varargs)
-	set_property(TARGET VinylTests APPEND_STRING PROPERTY COMPILE_FLAGS -Wno-non-pod-varargs)
-endif()

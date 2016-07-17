@@ -8,18 +8,6 @@ VINYL_NS_BEGIN;
 
 namespace Log
 {
-	FormatVar::FormatVar()
-	{
-		m_type = FVT_Unknown;
-		m_data = nullptr;
-	}
-
-	FormatVar::FormatVar(const FormatVar &copy)
-	{
-		m_type = copy.m_type;
-		m_data = copy.m_data;
-	}
-
 	FormatVar::FormatVar(int16_t i)
 	{
 		m_type = FVT_Integer_16;
@@ -121,7 +109,9 @@ namespace Log
 	s::String Format(const char* format, va_list vl)
 	{
 		s::StackArray<FormatVar> vars;
+#if !defined(__clang__)
 		vars.sa_bOnlyPop = true;
+#endif
 
 		int numHighest = 0;
 
@@ -148,8 +138,13 @@ namespace Log
 				}
 				if (num > numHighest) {
 					for (int j = numHighest; j < num; j++) {
-						FormatVar newvar = va_arg(vl, FormatVar);
+#if defined(__clang__)
+						FormatVar* newvar = va_arg(vl, FormatVar*);
+						vars.Push(newvar);
+#else
+						FormatVar &newvar = va_arg(vl, FormatVar);
 						vars.Push(&newvar);
+#endif
 					}
 					numHighest = num;
 				}

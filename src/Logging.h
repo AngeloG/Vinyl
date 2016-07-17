@@ -47,8 +47,6 @@ namespace Log
 		char* m_cache = nullptr;
 
 	public:
-		FormatVar();
-		FormatVar(const FormatVar &copy);
 		FormatVar(int16_t i);
 		FormatVar(int32_t i);
 		FormatVar(uint16_t i);
@@ -64,4 +62,8 @@ namespace Log
 
 VINYL_NS_END;
 
+#if defined(__clang__)
+#define FVAR(var) new v::Log::FormatVar(var)
+#else
 #define FVAR(var) v::Log::FormatVar(var)
+#endif
