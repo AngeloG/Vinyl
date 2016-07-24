@@ -25,10 +25,14 @@ class ZipEntry
 private:
 	ZipFile* m_zip;
 	uint32_t m_index;
-	size_t m_cachedSize = 0;
+	size_t m_cachedSize;
 
 public:
-	s::String GetName();
+	ZipEntry();
+	~ZipEntry();
+
+	s::String GetFilePath();
+	s::String GetFileName();
 	uint32_t GetIndex();
 	size_t GetSize();
 
@@ -55,6 +59,7 @@ private:
 public:
 	void Read(const char* fnm);
 	void GetEntries(s::StackArray<ZipEntry> &arr);
+	bool GetEntry(const char* name, ZipEntry &entry);
 
 	void Create(const char* fnm);
 	void AddFile(const char* entryName, const void* buffer, uint32_t len, CompressionLevel level = CL_Default);

@@ -5,10 +5,32 @@
 
 VINYL_NS_BEGIN;
 
-s::String ZipEntry::GetName()
+ZipEntry::ZipEntry()
+{
+	m_zip = nullptr;
+	m_index = 0;
+	m_cachedSize = 0;
+}
+
+ZipEntry::~ZipEntry()
+{
+}
+
+s::String ZipEntry::GetFilePath()
 {
 	char entryName[256];
 	mz_zip_reader_get_filename(m_zip->m_archive, m_index, entryName, 256);
+	return s::String(entryName);
+}
+
+s::String ZipEntry::GetFileName()
+{
+	char entryName[256];
+	mz_zip_reader_get_filename(m_zip->m_archive, m_index, entryName, 256);
+	char* entryFilename = strchr(entryName, '/');
+	if (entryFilename != nullptr) {
+		return s::String(entryFilename);
+	}
 	return s::String(entryName);
 }
 
@@ -86,6 +108,17 @@ void ZipFile::GetEntries(s::StackArray<ZipEntry> &arr)
 		entry.m_zip = this;
 		entry.m_index = i;
 	}
+}
+
+bool ZipFile::GetEntry(const char* name, ZipEntry &entry)
+{
+	int index = mz_zip_reader_locate_file(m_archive, name, nullptr, 0);
+	if (index == -1) {
+		return false;
+	}
+	entry.m_zip = this;
+	entry.m_index = index;
+	return true;
 }
 
 void ZipFile::Create(const char* fnm)
