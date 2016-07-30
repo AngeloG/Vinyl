@@ -42,7 +42,7 @@ public:
 public:
 	MemoryStream();
 	MemoryStream(const MemoryStream &copy);
-	~MemoryStream();
+	virtual ~MemoryStream();
 
 	uint32_t Size();
 	uint32_t Location();

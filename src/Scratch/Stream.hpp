@@ -45,7 +45,7 @@ public:
 
 public:
 	Stream();
-	~Stream();
+	virtual ~Stream();
 
 	virtual uint32_t Size() = 0;
 	virtual uint32_t Location() = 0;

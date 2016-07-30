@@ -60,7 +60,7 @@ public:
 
 public:
 	NetworkStream();
-	~NetworkStream();
+	virtual ~NetworkStream();
 
 	uint32_t Size();
 	uint32_t Location();
