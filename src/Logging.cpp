@@ -163,6 +163,29 @@ namespace Log
 
 	static s::Mutex _mutex;
 
+	static s::Stream* _streamCurrent = nullptr;
+	static s::Stream* _streamAll = nullptr;
+
+	static void WriteLogLine(const s::String &line)
+	{
+		if (_streamCurrent != nullptr) {
+			_streamCurrent->WriteLine(line);
+		}
+		if (_streamAll != nullptr) {
+			_streamAll->WriteLine(line);
+		}
+	}
+
+	static void FlushLog()
+	{
+		if (_streamCurrent != nullptr) {
+			_streamCurrent->Flush();
+		}
+		if (_streamAll != nullptr) {
+			_streamAll->Flush();
+		}
+	}
+
 	static void LogLine(const char* keyword, const s::String &str, int16_t color_windows, const char* color_linux)
 	{
 		_mutex.Lock();
@@ -188,7 +211,51 @@ namespace Log
 		printf("\x1B[%sm%s%s\x1B[0m\n", color_linux, (const char*)lineBegin, (const char*)str);
 #endif
 
+		WriteLogLine(lineBegin + str);
+		FlushLog();
+
 		_mutex.Unlock();
+	}
+
+	void StartLogFile(const char* fnm)
+	{
+		ASSERT(_streamCurrent == nullptr && _streamAll == nullptr);
+
+		s::String fnmCurrent = s::strPrintF("%s.log", fnm);
+		s::String fnmAll = s::strPrintF("%s.All.log", fnm);
+
+		s::FileStream* fsCurrent = new s::FileStream;
+		fsCurrent->Open(fnmCurrent, "w+b", true);
+		_streamCurrent = fsCurrent;
+
+		s::FileStream* fsAll = new s::FileStream;
+		fsAll->Open(fnmAll, "a+b", true);
+		_streamAll = fsAll;
+
+		time_t t = time(nullptr);
+		tm tms;
+#if WINDOWS
+		localtime_s(&tms, &t);
+#else
+		localtime_r(&t, &tms);
+#endif
+
+		WriteLogLine("");
+		WriteLogLine(s::strPrintF("  --- Start of log file: %d-%02d-%02d %02d:%02d:%02d ---",
+			1900 + tms.tm_year, tms.tm_mon, tms.tm_mday,
+			tms.tm_hour, tms.tm_min, tms.tm_sec));
+		WriteLogLine("");
+		FlushLog();
+	}
+
+	void EndLogFile()
+	{
+		ASSERT(_streamCurrent != nullptr && _streamAll != nullptr);
+
+		delete _streamCurrent;
+		delete _streamAll;
+
+		_streamCurrent = _streamAll = nullptr;
 	}
 
 	void Trace(const char* format, ...)

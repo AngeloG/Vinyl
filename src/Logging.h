@@ -20,6 +20,9 @@ namespace Log
 
 	extern LogLevel Level;
 
+	extern void StartLogFile(const char* fnm);
+	extern void EndLogFile();
+
 	extern void Trace(const char* format, ...);
 	extern void Debug(const char* format, ...);
 	extern void Info(const char* format, ...);
