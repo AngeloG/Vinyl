@@ -10,6 +10,9 @@ namespace File
 	bool Copy(const char* fnmA, const char* fnmB, bool should_override = false);
 	bool Move(const char* fnmA, const char* fnmB);
 	bool Delete(const char* fnm);
+
+	s::String ReadAll(const char* fnm);
+	void WriteAll(const char* fnm, const char* content);
 }
 
 VINYL_NS_END;

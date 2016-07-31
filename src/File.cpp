@@ -60,6 +60,29 @@ namespace File
 		return unlink(fnm) == 0;
 #endif
 	}
+
+	s::String ReadAll(const char* fnm)
+	{
+		s::String ret;
+
+		s::FileStream fs;
+		fs.Open(fnm, "r");
+		char buffer[1025];
+		while (!fs.AtEOF()) {
+			int bytesRead = fs.Read(buffer, 1024);
+			buffer[bytesRead] = '\0';
+			ret += buffer;
+		}
+
+		return ret;
+	}
+
+	void WriteAll(const char* fnm, const char* content)
+	{
+		s::FileStream fs;
+		fs.Open(fnm, "w");
+		fs.Write(content, strlen(content));
+	}
 }
 
 VINYL_NS_END;
