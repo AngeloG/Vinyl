@@ -8,7 +8,10 @@ class FolderIndex
 {
 public:
 	FolderIndex();
+	FolderIndex(const char* path, bool recursive);
 	~FolderIndex();
+
+	void Populate(bool recursive);
 
 	const char* GetPath();
 
