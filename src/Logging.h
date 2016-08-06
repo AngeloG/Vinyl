@@ -65,8 +65,4 @@ namespace Log
 
 VINYL_NS_END;
 
-#if defined(__clang__)
 #define FVAR(var) new v::Log::FormatVar(var)
-#else
-#define FVAR(var) v::Log::FormatVar(var)
-#endif

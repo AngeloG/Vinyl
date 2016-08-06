@@ -7,8 +7,11 @@ int main()
 {
 	v::Log::Level = v::Log::LogLevel_Trace;
 
-	bool ok = v::File::Copy("test.txt", "test2.txt", true);
-	v::Log::Info("Copy: %1", FVAR(ok ? "OK" : "ERROR"));
+	int x, y;
+	x = 10;
+	y = 20;
+
+	v::Log::Info("This is a test %1 and %2.", FVAR(x), FVAR(y));
 
 	return 0;
 }

@@ -11,25 +11,25 @@ namespace Log
 	FormatVar::FormatVar(int16_t i)
 	{
 		m_type = FVT_Integer_16;
-		m_data = (void*)i;
+		m_data = reinterpret_cast<void*>(i);
 	}
 
 	FormatVar::FormatVar(int32_t i)
 	{
 		m_type = FVT_Integer_32;
-		m_data = (void*)i;
+		m_data = reinterpret_cast<void*>(i);
 	}
 
 	FormatVar::FormatVar(uint16_t i)
 	{
 		m_type = FVT_UnsignedInteger_16;
-		m_data = (void*)i;
+		m_data = reinterpret_cast<void*>(i);
 	}
 
 	FormatVar::FormatVar(uint32_t i)
 	{
 		m_type = FVT_UnsignedInteger_32;
-		m_data = (void*)i;
+		m_data = reinterpret_cast<void*>(i);
 	}
 
 	FormatVar::FormatVar(void* p)
@@ -47,7 +47,7 @@ namespace Log
 	FormatVar::FormatVar(char c)
 	{
 		m_type = FVT_Char;
-		m_data = (void*)c;
+		m_data = reinterpret_cast<void*>(c);
 	}
 
 	FormatVar::~FormatVar()
@@ -109,13 +109,9 @@ namespace Log
 	s::String Format(const char* format, va_list vl)
 	{
 		s::StackArray<FormatVar> vars;
-#if !defined(__clang__)
-		vars.sa_bOnlyPop = true;
-#endif
 
 		int numHighest = 0;
 
-		int bufferLen = 128;
 		s::String ret;
 
 		int len = strlen(format);
@@ -138,13 +134,8 @@ namespace Log
 				}
 				if (num > numHighest) {
 					for (int j = numHighest; j < num; j++) {
-#if defined(__clang__)
 						FormatVar* newvar = va_arg(vl, FormatVar*);
 						vars.Push(newvar);
-#else
-						FormatVar &newvar = va_arg(vl, FormatVar);
-						vars.Push(&newvar);
-#endif
 					}
 					numHighest = num;
 				}
