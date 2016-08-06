@@ -11,7 +11,7 @@ int main()
 {
 	v::Init();
 	v::Log::Level = v::Log::LogLevel_Trace;
-	v::Mount::Add(new v::MountpointZip("Test1.zip"));
+	v::Mount::Add(new v::MountpointZip("test1.zip"));
 	v::Mount::Add(new v::MountpointZip("Test2.zip"));
 
 	v::Folder folder("test");

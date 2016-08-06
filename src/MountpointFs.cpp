@@ -29,14 +29,14 @@ bool MountpointFs::FileCopy(const char* fnmA, const char* fnmB, bool should_over
 #if WINDOWS
 	return CopyFile(fnmA, fnmB, !should_override) == 1;
 #else
-	if (!Exists(fnmA)) {
+	if (!FileExists(fnmA)) {
 		return false;
 	}
-	if (Exists(fnmB)) {
+	if (FileExists(fnmB)) {
 		if (!should_override) {
 			return false;
 		}
-		Delete(fnmB);
+		FileDelete(fnmB);
 	}
 	FILE* fhA = fopen(fnmA, "rb");
 	FILE* fhB = fopen(fnmB, "wb");
