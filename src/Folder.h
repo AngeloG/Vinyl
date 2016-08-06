@@ -12,6 +12,7 @@ public:
 	~FolderIndex();
 
 	void Populate(bool recursive);
+	void Clear();
 
 	const char* GetPath();
 

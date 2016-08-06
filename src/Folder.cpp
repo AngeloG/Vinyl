@@ -25,6 +25,13 @@ void FolderIndex::Populate(bool recursive)
 	}
 }
 
+void FolderIndex::Clear()
+{
+	m_path = "";
+	m_files.Clear();
+	m_dirs.Clear();
+}
+
 const char* FolderIndex::GetPath()
 {
 	return m_path;

@@ -16,6 +16,19 @@ namespace File
 		return false;
 	}
 
+	bool ExistsForWriting(const char* fnm)
+	{
+		for (auto &point : Mount::Points) {
+			if (point.IsReadOnly()) {
+				continue;
+			}
+			if (point.FileExists(fnm)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	bool Copy(const char* fnmA, const char* fnmB, bool should_override)
 	{
 		for (auto &point : Mount::Points) {
