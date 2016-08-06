@@ -121,6 +121,12 @@ bool ZipFile::GetEntry(const char* name, ZipEntry &entry)
 	return true;
 }
 
+bool ZipFile::EntryExists(const char* name)
+{
+	int index = mz_zip_reader_locate_file(m_archive, name, nullptr, 0);
+	return index != -1;
+}
+
 void ZipFile::Create(const char* fnm)
 {
 	if (!mz_zip_writer_init_file(m_archive, fnm, 0)) {

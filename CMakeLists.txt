@@ -8,6 +8,10 @@ add_library(vinyl
 	src/Common.h
 	src/Mountpoint.cpp
 	src/Mountpoint.h
+	src/MountpointFs.cpp
+	src/MountpointFs.h
+	src/MountpointZip.cpp
+	src/MountpointZip.h
 	src/Folder.cpp
 	src/Folder.h
 	src/File.cpp

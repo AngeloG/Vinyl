@@ -60,6 +60,7 @@ public:
 	void Read(const char* fnm);
 	void GetEntries(s::StackArray<ZipEntry> &arr);
 	bool GetEntry(const char* name, ZipEntry &entry);
+	bool EntryExists(const char* name);
 
 	void Create(const char* fnm);
 	void AddFile(const char* entryName, const void* buffer, uint32_t len, CompressionLevel level = CL_Default);

@@ -4,15 +4,10 @@
 
 VINYL_NS_BEGIN;
 
-class Folder;
-
 class FolderIndex
 {
-	friend class Folder;
-
 public:
 	FolderIndex();
-	FolderIndex(const char* path, bool recursive);
 	~FolderIndex();
 
 	const char* GetPath();
@@ -23,9 +18,7 @@ public:
 	int GetDirCount();
 	const char* GetDirPath(int i);
 
-private:
-	void ReadDir(void* impl, const char* dirname, bool recursive);
-
+public:
 	s::String m_path;
 	s::StackArray<s::String> m_files;
 	s::StackArray<s::String> m_dirs;

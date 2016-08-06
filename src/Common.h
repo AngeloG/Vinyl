@@ -4,3 +4,9 @@
 
 #define VINYL_NS_BEGIN namespace v {
 #define VINYL_NS_END }
+
+VINYL_NS_BEGIN;
+
+void Init();
+
+VINYL_NS_END;

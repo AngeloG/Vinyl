@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Common.h"
-#include "Folder.h"
+#include "Mountpoint.h"
 
 VINYL_NS_BEGIN;
 
-class Mountpoint
+class MountpointFs : public Mountpoint
 {
 public:
-	virtual bool IsReadOnly() = 0;
+	virtual bool IsReadOnly();
 
 	virtual bool FileExists(const char* fnm);
 	virtual bool FileCopy(const char* fnmA, const char* fnmB, bool should_override = false);
@@ -19,17 +19,9 @@ public:
 	virtual bool FileWriteAll(const char* fnm, const char* content);
 
 	virtual void FolderGetIndex(FolderIndex &ret, const char* dir, bool recursive);
+
+private:
+	void ReadDir(FolderIndex &ret, void* impl, const char* dirname, bool recursive);
 };
-
-namespace Mount
-{
-	// Mountpoints.
-	// NOTE: It's generally a good idea to only have 1 writable mountpoint!
-	//       Having multiple writable mountpoints means the first one to succeed will win.
-	extern s::StackArray<Mountpoint> Points;
-
-	void Add(Mountpoint* point);
-	void Remove(Mountpoint* point);
-}
 
 VINYL_NS_END;

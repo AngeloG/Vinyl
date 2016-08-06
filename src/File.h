@@ -12,7 +12,7 @@ namespace File
 	bool Delete(const char* fnm);
 
 	s::String ReadAll(const char* fnm);
-	void WriteAll(const char* fnm, const char* content);
+	bool WriteAll(const char* fnm, const char* content);
 }
 
 VINYL_NS_END;
