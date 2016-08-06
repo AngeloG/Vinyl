@@ -11,6 +11,7 @@ class FolderIndex
 	friend class Folder;
 
 public:
+	FolderIndex();
 	FolderIndex(const char* path, bool recursive);
 	~FolderIndex();
 

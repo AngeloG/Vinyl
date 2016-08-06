@@ -9,6 +9,10 @@
 
 VINYL_NS_BEGIN;
 
+FolderIndex::FolderIndex()
+{
+}
+
 FolderIndex::FolderIndex(const char* path, bool recursive)
 {
 	s::String pathname = path;
