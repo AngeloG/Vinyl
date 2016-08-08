@@ -116,9 +116,9 @@ void Filename::FromHome(const String &strPath)
 	if ((homedir = getenv("HOME") ) == nullptr) {
 	    homedir = getpwuid(getuid())->pw_dir;
 	}
-	if(homedir == nullptr){
+	if (homedir == nullptr) {
 		this->CopyToBuffer("~/" + strPath);
-	}else{
+	} else {
 		this->CopyToBuffer(String(homedir) + "/" + strPath);
 	}
 #endif
