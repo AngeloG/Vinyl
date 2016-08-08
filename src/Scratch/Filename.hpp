@@ -114,7 +114,7 @@ void Filename::FromHome(const String &strPath)
 #else
 	const char* homedir;
 	if ((homedir = getenv("HOME") ) == nullptr) {
-	    homedir = getpwuid(getuid())->pw_dir;
+		homedir = getpwuid(getuid())->pw_dir;
 	}
 	if (homedir == nullptr) {
 		this->CopyToBuffer("~/" + strPath);
