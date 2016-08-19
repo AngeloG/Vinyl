@@ -1,5 +1,6 @@
 #pragma once
 
+#define SCRATCH_NAMESPACE s
 #include "Scratch/Scratch.hpp"
 
 #define VINYL_NS_BEGIN namespace v {

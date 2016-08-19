@@ -35,4 +35,5 @@ add_executable(VinylTests
 target_link_libraries(VinylTests vinyl)
 include_directories(
 	src
+	src/Scratch/
 )
