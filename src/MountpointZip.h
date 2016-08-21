@@ -21,7 +21,7 @@ public:
 
 	virtual s::String FileReadAll(const char* fnm);
 
-	virtual void FolderGetIndex(FolderIndex &ret, const char* dir, bool recursive);
+	virtual void FolderGetIndex(FolderIndex &ret, const char* dir, bool recursive, FolderIndexFilter* filter);
 };
 
 VINYL_NS_END;

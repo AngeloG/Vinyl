@@ -4,14 +4,18 @@
 
 VINYL_NS_BEGIN;
 
+typedef s::Function<bool(const s::Filename &)> FolderIndexFilter;
+
 class FolderIndex
 {
 public:
 	FolderIndex();
 	FolderIndex(const char* path, bool recursive);
+	FolderIndex(const char* path, bool recursive, FolderIndexFilter filter);
 	~FolderIndex();
 
 	void Populate(bool recursive);
+	void Populate(bool recursive, FolderIndexFilter filter);
 	void Clear();
 
 	const char* GetPath();
@@ -37,6 +41,7 @@ public:
 	const char* GetPath();
 
 	FolderIndex GetIndex(bool recursive = false);
+	FolderIndex GetIndex(bool recursive, FolderIndexFilter filter);
 
 private:
 	s::String m_path;

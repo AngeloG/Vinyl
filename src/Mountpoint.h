@@ -18,7 +18,7 @@ public:
 	virtual s::String FileReadAll(const char* fnm);
 	virtual bool FileWriteAll(const char* fnm, const char* content);
 
-	virtual void FolderGetIndex(FolderIndex &ret, const char* dir, bool recursive);
+	virtual void FolderGetIndex(FolderIndex &ret, const char* dir, bool recursive, FolderIndexFilter* filter);
 };
 
 namespace Mount
