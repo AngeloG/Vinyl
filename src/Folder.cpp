@@ -14,7 +14,7 @@ FolderIndex::FolderIndex(const char* path, bool recursive)
 	Populate(recursive);
 }
 
-FolderIndex::FolderIndex(const char* path, bool recursive, FolderIndexFilter filter)
+FolderIndex::FolderIndex(const char* path, bool recursive, const FolderIndexFilter &filter)
 {
 	m_path = path;
 	Populate(recursive, filter);
@@ -31,10 +31,10 @@ void FolderIndex::Populate(bool recursive)
 	}
 }
 
-void FolderIndex::Populate(bool recursive, FolderIndexFilter filter)
+void FolderIndex::Populate(bool recursive, const FolderIndexFilter &filter)
 {
 	for (auto &point : Mount::Points) {
-		point.FolderGetIndex(*this, m_path, recursive, &filter);
+		point.FolderGetIndex(*this, m_path, recursive, filter);
 	}
 }
 
@@ -96,7 +96,7 @@ FolderIndex Folder::GetIndex(bool recursive)
 	return ret;
 }
 
-FolderIndex Folder::GetIndex(bool recursive, FolderIndexFilter filter)
+FolderIndex Folder::GetIndex(bool recursive, const FolderIndexFilter &filter)
 {
 	FolderIndex ret;
 	s::String pathname = m_path;

@@ -11,11 +11,11 @@ class FolderIndex
 public:
 	FolderIndex();
 	FolderIndex(const char* path, bool recursive);
-	FolderIndex(const char* path, bool recursive, FolderIndexFilter filter);
+	FolderIndex(const char* path, bool recursive, const FolderIndexFilter &filter);
 	~FolderIndex();
 
 	void Populate(bool recursive);
-	void Populate(bool recursive, FolderIndexFilter filter);
+	void Populate(bool recursive, const FolderIndexFilter &filter);
 	void Clear();
 
 	const char* GetPath();
@@ -41,7 +41,7 @@ public:
 	const char* GetPath();
 
 	FolderIndex GetIndex(bool recursive = false);
-	FolderIndex GetIndex(bool recursive, FolderIndexFilter filter);
+	FolderIndex GetIndex(bool recursive, const FolderIndexFilter &filter);
 
 private:
 	s::String m_path;

@@ -95,7 +95,7 @@ bool MountpointFs::FileWriteAll(const char* fnm, const char* content)
 	return true;
 }
 
-void MountpointFs::FolderGetIndex(FolderIndex &ret, const char* dir, bool recursive, FolderIndexFilter* filter)
+void MountpointFs::FolderGetIndex(FolderIndex &ret, const char* dir, bool recursive, const FolderIndexFilter &filter)
 {
 #if WINDOWS
 	ReadDir(ret, nullptr, dir, recursive, filter);
@@ -104,7 +104,7 @@ void MountpointFs::FolderGetIndex(FolderIndex &ret, const char* dir, bool recurs
 #endif
 }
 
-void MountpointFs::ReadDir(FolderIndex &ret, void* impl, const char* dirname, bool recursive, FolderIndexFilter* filter)
+void MountpointFs::ReadDir(FolderIndex &ret, void* impl, const char* dirname, bool recursive, const FolderIndexFilter &filter)
 {
 #if WINDOWS
 	WIN32_FIND_DATA findData;
@@ -127,7 +127,7 @@ void MountpointFs::ReadDir(FolderIndex &ret, void* impl, const char* dirname, bo
 
 		if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 			path += "/";
-			if (filter != nullptr && !(*filter)(path)) {
+			if (filter != nullptr && !filter(path)) {
 				continue;
 			}
 			ret.m_dirs.Push() = path;
@@ -135,7 +135,7 @@ void MountpointFs::ReadDir(FolderIndex &ret, void* impl, const char* dirname, bo
 				ReadDir(ret, nullptr, path, true, filter);
 			}
 		} else {
-			if (filter != nullptr && !(*filter)(path)) {
+			if (filter != nullptr && !filter(path)) {
 				continue;
 			}
 			ret.m_files.Push() = path;
@@ -157,13 +157,13 @@ void MountpointFs::ReadDir(FolderIndex &ret, void* impl, const char* dirname, bo
 		struct stat fst;
 		stat(path, &fst);
 		if (S_ISREG(fst.st_mode)) {
-			if (filter != nullptr && !(*filter)(path)) {
+			if (filter != nullptr && !filter(path)) {
 				continue;
 			}
 			ret.m_files.Push() = path;
 		} else {
 			path += "/";
-			if (filter != nullptr && !(*filter)(path)) {
+			if (filter != nullptr && !filter(path)) {
 				continue;
 			}
 			ret.m_dirs.Push() = path;

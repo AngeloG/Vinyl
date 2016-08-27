@@ -37,7 +37,7 @@ s::String MountpointZip::FileReadAll(const char* fnm)
 	return ret;
 }
 
-void MountpointZip::FolderGetIndex(FolderIndex &ret, const char* dir, bool recursive, FolderIndexFilter* filter)
+void MountpointZip::FolderGetIndex(FolderIndex &ret, const char* dir, bool recursive, const FolderIndexFilter &filter)
 {
 	bool curDir = !strcmp(dir, "./");
 
@@ -68,7 +68,7 @@ void MountpointZip::FolderGetIndex(FolderIndex &ret, const char* dir, bool recur
 			}
 
 			if (!ret.m_dirs.Contains(dirname)) {
-				if (filter != nullptr && !(*filter)(dirname)) {
+				if (filter != nullptr && !filter(dirname)) {
 					continue;
 				}
 				ret.m_dirs.Push() = dirname;
@@ -98,7 +98,7 @@ void MountpointZip::FolderGetIndex(FolderIndex &ret, const char* dir, bool recur
 			continue;
 		}
 
-		if (filter != nullptr && !(*filter)(path)) {
+		if (filter != nullptr && !filter(path)) {
 			continue;
 		}
 
