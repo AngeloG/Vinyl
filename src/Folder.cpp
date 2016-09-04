@@ -8,33 +8,46 @@ FolderIndex::FolderIndex()
 {
 }
 
-FolderIndex::FolderIndex(const char* path, bool recursive)
+FolderIndex::FolderIndex(const char* path, uint32_t flags)
 {
 	m_path = path;
-	Populate(recursive);
+	Populate(flags);
 }
 
-FolderIndex::FolderIndex(const char* path, bool recursive, const FolderIndexFilter &filter)
+FolderIndex::FolderIndex(const char* path, uint32_t flags, const FolderIndexFilter &filter)
 {
 	m_path = path;
-	Populate(recursive, filter);
+	Populate(flags, filter);
 }
 
 FolderIndex::~FolderIndex()
 {
 }
 
-void FolderIndex::Populate(bool recursive)
+void FolderIndex::Populate(uint32_t flags)
 {
 	for (auto &point : Mount::Points) {
-		point.FolderGetIndex(*this, m_path, recursive, nullptr);
+		point.FolderGetIndex(*this, m_path, flags, nullptr);
 	}
+	AfterPopulate(flags);
 }
 
-void FolderIndex::Populate(bool recursive, const FolderIndexFilter &filter)
+void FolderIndex::Populate(uint32_t flags, const FolderIndexFilter &filter)
 {
 	for (auto &point : Mount::Points) {
-		point.FolderGetIndex(*this, m_path, recursive, filter);
+		point.FolderGetIndex(*this, m_path, flags, filter);
+	}
+	AfterPopulate(flags);
+}
+
+void FolderIndex::AfterPopulate(uint32_t flags)
+{
+	if (flags & FolderIndexFlags_Sorted) {
+		auto func = [](const s::String &a, const s::String &b) -> int {
+			return a.CaseCompare(b);
+		};
+		m_dirs.Sort(func);
+		m_files.Sort(func);
 	}
 }
 
@@ -84,7 +97,7 @@ const char* Folder::GetPath()
 	return m_path;
 }
 
-FolderIndex Folder::GetIndex(bool recursive)
+FolderIndex Folder::GetIndex(uint32_t flags)
 {
 	FolderIndex ret;
 	s::String pathname = m_path;
@@ -92,11 +105,11 @@ FolderIndex Folder::GetIndex(bool recursive)
 		pathname += "/";
 	}
 	ret.m_path = pathname;
-	ret.Populate(recursive);
+	ret.Populate(flags);
 	return ret;
 }
 
-FolderIndex Folder::GetIndex(bool recursive, const FolderIndexFilter &filter)
+FolderIndex Folder::GetIndex(const FolderIndexFilter &filter, uint32_t flags)
 {
 	FolderIndex ret;
 	s::String pathname = m_path;
@@ -104,7 +117,7 @@ FolderIndex Folder::GetIndex(bool recursive, const FolderIndexFilter &filter)
 		pathname += "/";
 	}
 	ret.m_path = pathname;
-	ret.Populate(recursive, filter);
+	ret.Populate(flags, filter);
 	return ret;
 }
 

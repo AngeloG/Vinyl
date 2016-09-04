@@ -95,16 +95,16 @@ bool MountpointFs::FileWriteAll(const char* fnm, const char* content)
 	return true;
 }
 
-void MountpointFs::FolderGetIndex(FolderIndex &ret, const char* dir, bool recursive, const FolderIndexFilter &filter)
+void MountpointFs::FolderGetIndex(FolderIndex &ret, const char* dir, uint32_t flags, const FolderIndexFilter &filter)
 {
 #if WINDOWS
-	ReadDir(ret, nullptr, dir, recursive, filter);
+	ReadDir(ret, nullptr, dir, flags, filter);
 #else
-	ReadDir(ret, opendir(dir), dir, recursive, filter);
+	ReadDir(ret, opendir(dir), dir, flags, filter);
 #endif
 }
 
-void MountpointFs::ReadDir(FolderIndex &ret, void* impl, const char* dirname, bool recursive, const FolderIndexFilter &filter)
+void MountpointFs::ReadDir(FolderIndex &ret, void* impl, const char* dirname, uint32_t flags, const FolderIndexFilter &filter)
 {
 #if WINDOWS
 	WIN32_FIND_DATA findData;
@@ -131,7 +131,7 @@ void MountpointFs::ReadDir(FolderIndex &ret, void* impl, const char* dirname, bo
 				continue;
 			}
 			ret.m_dirs.Push() = path;
-			if (recursive) {
+			if (flags & FolderIndexFlags_Recursive) {
 				ReadDir(ret, nullptr, path, true, filter);
 			}
 		} else {
@@ -167,7 +167,7 @@ void MountpointFs::ReadDir(FolderIndex &ret, void* impl, const char* dirname, bo
 				continue;
 			}
 			ret.m_dirs.Push() = path;
-			if (recursive) {
+			if (flags & FolderIndexFlags_Recursive) {
 				ReadDir(ret, opendir(path), path, true, filter);
 			}
 		}

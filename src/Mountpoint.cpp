@@ -34,7 +34,7 @@ bool Mountpoint::FileWriteAll(const char* fnm, const char* content)
 	return false;
 }
 
-void Mountpoint::FolderGetIndex(FolderIndex &ret, const char* dir, bool recursive, const FolderIndexFilter &filter)
+void Mountpoint::FolderGetIndex(FolderIndex &ret, const char* dir, uint32_t flags, const FolderIndexFilter &filter)
 {
 }
 

@@ -6,16 +6,23 @@ VINYL_NS_BEGIN;
 
 typedef s::Function<bool(const s::Filename &)> FolderIndexFilter;
 
+const uint32_t FolderIndexFlags_Recursive = (1 << 0);
+const uint32_t FolderIndexFlags_Sorted = (1 << 1);
+
 class FolderIndex
 {
 public:
 	FolderIndex();
-	FolderIndex(const char* path, bool recursive);
-	FolderIndex(const char* path, bool recursive, const FolderIndexFilter &filter);
+	FolderIndex(const char* path, uint32_t flags);
+	FolderIndex(const char* path, uint32_t flags, const FolderIndexFilter &filter);
 	~FolderIndex();
 
-	void Populate(bool recursive);
-	void Populate(bool recursive, const FolderIndexFilter &filter);
+	void Populate(uint32_t flags);
+	void Populate(uint32_t flags, const FolderIndexFilter &filter);
+private:
+	void AfterPopulate(uint32_t flags);
+
+public:
 	void Clear();
 
 	const char* GetPath();
@@ -40,8 +47,8 @@ public:
 
 	const char* GetPath();
 
-	FolderIndex GetIndex(bool recursive = false);
-	FolderIndex GetIndex(bool recursive, const FolderIndexFilter &filter);
+	FolderIndex GetIndex(uint32_t flags = 0);
+	FolderIndex GetIndex(const FolderIndexFilter &filter, uint32_t flags = 0);
 
 private:
 	s::String m_path;
